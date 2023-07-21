@@ -26,6 +26,14 @@ async def update_todos(id: int, todo: UpdateTodo, db: Session = Depends(get_db))
     return crud.update_todo(db, id, todo)
 
 
+@todos_router.delete("/completed")
+async def delete_completed_todos(db: Session = Depends(get_db)):
+    try:
+        crud.delete_completed_todo(db)
+        return True
+    except Exception:
+        raise HTTPException(status_code=400, detail="Cannot delete todo")
+
 @todos_router.delete("/{id}")
 async def delete_todos(id: int, db: Session = Depends(get_db)):
     try:
@@ -36,10 +44,3 @@ async def delete_todos(id: int, db: Session = Depends(get_db)):
     except Exception:
         raise HTTPException(status_code=400, detail="Cannot delete todo")
 
-@todos_router.delete("/completed")
-async def delete_completed_todos(db: Session = Depends(get_db)):
-    try:
-        crud.delete_completed_todo(db)
-        return True
-    except Exception:
-        raise HTTPException(status_code=400, detail="Cannot delete todo")
